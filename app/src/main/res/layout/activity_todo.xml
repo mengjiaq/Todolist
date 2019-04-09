@@ -72,18 +72,22 @@
                 android:layout_height="wrap_content" />
 
 
-            <Button
-                android:id="@+id/select_location"
-                android:text="Current Place"
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="fill_parent"
+        android:layout_marginTop="300dp"
+        android:layout_height="400dp"
+        android:orientation="vertical" >
 
-                android:textAlignment="center"
-                android:padding="10dp"
-                android:background="@drawable/gradient"
-                android:layout_marginTop="300dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:onClick="Goplacepicker"/>
+        <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
+            android:id="@+id/map"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
 
+    </LinearLayout>
+>>>>>>> Stashed changes
     <!--<TimePicker-->
         <!--android:id="@+id/timePicker1"-->
         <!--android:layout_width="207dp"-->
