@@ -81,24 +81,12 @@ public class TodoActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private GoogleMap mMap;
 
-    // A default location (Sydney, Australia) and default zoom to use when location permission is
-    // not granted.
     private LatLng mDefaultLocation;
 
-    // The geographical location where the device is currently located. That is, the last-known
-    // location retrieved by the Fused Location Provider.
-    private Location mLastKnownLocation;
 
     // Keys for storing activity state.
     private static final String KEY_CAMERA_POSITION = "camera_position";
     private static final String KEY_LOCATION = "location";
-
-    // Used for selecting the current place.
-    private static final int M_MAX_ENTRIES = 5;
-    private String[] mLikelyPlaceNames;
-    private String[] mLikelyPlaceAddresses;
-    private String[] mLikelyPlaceAttributions;
-    private LatLng[] mLikelyPlaceLatLngs;
 
     /**
      * Saves the state of the map when the activity is paused.
@@ -107,7 +95,6 @@ public class TodoActivity extends AppCompatActivity implements OnMapReadyCallbac
     protected void onSaveInstanceState(Bundle outState) {
         if (mMap != null) {
             outState.putParcelable(KEY_CAMERA_POSITION, mMap.getCameraPosition());
-            outState.putParcelable(KEY_LOCATION, mLastKnownLocation);
             super.onSaveInstanceState(outState);
         }
     }
@@ -304,13 +291,11 @@ public class TodoActivity extends AppCompatActivity implements OnMapReadyCallbac
         String state = addresses.get(0).getAdminArea();
         String country = addresses.get(0).getCountryName();
         String postalCode = addresses.get(0).getPostalCode();
-        String knownName = addresses.get(0).getFeatureName();
 
         postalCode = (postalCode == null) ? "" : postalCode;
         address = (address == null) ? "unknown" : address;
         city = (city == null) ? "" : city;
         country = (country == null) ? "unknown" : country;
-        knownName = (knownName == null) ? "" : knownName;
         state = (state == null) ? "unknown" : state;
 
         String place = address + "\n" + city + ", " + state + ", " + country
@@ -329,16 +314,6 @@ public class TodoActivity extends AppCompatActivity implements OnMapReadyCallbac
         mMap.addMarker(markerOptions);
     }
 }
-        //showCurrentPlace();
-        // Prompt the user for permission.
-//        getLocationPermission();
-////
-////        // Turn on the My Location layer and the related control on the map.
-////        updateLocationUI();
-////
-//        // Get the current location of the device and set the position of the map.
-//        getDeviceLocation();
-
 
 
 
