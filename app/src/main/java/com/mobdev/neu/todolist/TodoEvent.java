@@ -23,13 +23,13 @@ public class TodoEvent implements Serializable {
 
     public TodoEvent() {
         Calendar cal = Calendar.getInstance();
-        SimpleDateFormat sdf = new SimpleDateFormat("YYYY/MM/dd HH:mm");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm");
 
         this.time = sdf.format(cal.getTime());
     }
     public TodoEvent(String name, String note) {
         Calendar cal = Calendar.getInstance();
-        SimpleDateFormat sdf = new SimpleDateFormat("YYYY/MM/dd HH:mm");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm");
         this.name = name;
         this.note = note;
         this.time = sdf.format(cal.getTime());

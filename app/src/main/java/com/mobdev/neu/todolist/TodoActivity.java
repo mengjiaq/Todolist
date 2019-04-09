@@ -131,7 +131,7 @@ public class TodoActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         selectTime = (TextView) findViewById(R.id.select_time);
         Calendar cal = Calendar.getInstance();
-        SimpleDateFormat sdf = new SimpleDateFormat("YYYY/mm/dd HH:mm");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm");
         selectTime.setText(sdf.format(cal.getTime()));
         selectTime.setOnClickListener(new View.OnClickListener() {
 
@@ -144,12 +144,11 @@ public class TodoActivity extends AppCompatActivity implements OnMapReadyCallbac
                 int hour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
                 int minute = mcurrentTime.get(Calendar.MINUTE);
                 TimePickerDialog mTimePicker;
-                mTimePicker = new TimePickerDialog(TodoActivity.this, new TimePickerDialog.OnTimeSetListener() {
-                    @Override
-                    public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
-                        selectTime.setText(selectTime.getText()+ " " + (selectedHour > 9?selectedHour:"0"+selectedHour)
-                                +":"+selectedMinute);
-                    }
+                mTimePicker = new TimePickerDialog(TodoActivity.this,
+                        (timePicker, selectedHour, selectedMinute) -> {
+                    selectTime.setText(selectTime.getText()+ " " +
+                            (selectedHour > 9?selectedHour:"0"+selectedHour)+":"+selectedMinute);
+
                 }, hour, minute,true);
                 mTimePicker.setTitle("Select Time");
                 mTimePicker.show();
@@ -157,12 +156,10 @@ public class TodoActivity extends AppCompatActivity implements OnMapReadyCallbac
 
                 // date picker dialog
                 DatePickerDialog mDatePicker = new DatePickerDialog(TodoActivity.this,
-                        new DatePickerDialog.OnDateSetListener() {
-                            @Override
-                            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                                selectTime.setText(year + "/" + ((monthOfYear + 1) > 9?
+                        (view, yearName, monthOfYear, dayOfMonth) -> {
+                                selectTime.setText(yearName + "/" + ((monthOfYear + 1) > 9?
                                         (monthOfYear + 1):"0"+(monthOfYear + 1)) + "/"+dayOfMonth);
-                            }
+
                         }, year, month, day);
                 mDatePicker.show();
 
@@ -192,45 +189,44 @@ public class TodoActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
 
         FloatingActionButton fab = findViewById(R.id.btnConfirm);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String name = ((EditText) findViewById(R.id.event_name)).getText().toString();
+        fab.setOnClickListener(view -> {String name = ((EditText) findViewById(R.id.event_name)).getText().toString();
 
-                if (name == null || name.length() == 0) {
-                    Snackbar.make(view, "The name should not be empty", Snackbar.LENGTH_LONG)
-                            .setAction("Action", null).show();
-                    return;
-                }
-                String note = ((EditText) findViewById(R.id.event_note)).getText().toString();
-                TodoEvent newEvent = new TodoEvent(name, note, selectTime.getText().toString());
-                newEvent.setLatitude(latitude);
-                newEvent.setLongitude(longitude);
-                FirebaseDatabase database = FirebaseDatabase.getInstance();
-                Map<String, Object> childUpdates = new HashMap<>();
-                if (!isEdit) {
+            if (name == null || name.length() == 0) {
+                Snackbar.make(view, "The name should not be empty", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+                return;
+            }
+            String note = ((EditText) findViewById(R.id.event_note)).getText().toString();
+            TodoEvent newEvent = new TodoEvent(name, note, selectTime.getText().toString());
+            newEvent.setLatitude(latitude);
+            newEvent.setLongitude(longitude);
+            FirebaseDatabase database = FirebaseDatabase.getInstance();
+            Map<String, Object> childUpdates = new HashMap<>();
+            if (!isEdit) {
 
-                    String key = database.getReference("todoList").push().getKey();
-                    childUpdates.put( key, newEvent.toFirebaseObject());
-                    MainActivity.addEvent(newEvent, key);
+                String key = database.getReference("todoList").push().getKey();
+                childUpdates.put( key, newEvent.toFirebaseObject());
+                MainActivity.addEvent(newEvent, key);
 
-                } else {
-                    String key = MainActivity.editEvent(newEvent, position);
-                    childUpdates.put( key, newEvent.toFirebaseObject());
-                }
-                database.getReference("todoList").updateChildren(childUpdates, new DatabaseReference.CompletionListener() {
-                    @Override
-                    public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-                        if (databaseError == null) {
-                            finish();
-                        }
+            } else {
+                String key = MainActivity.editEvent(newEvent, position);
+                childUpdates.put( key, newEvent.toFirebaseObject());
+            }
+            database.getReference("todoList").updateChildren(childUpdates, new DatabaseReference.CompletionListener() {
+                @Override
+                public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                    if (databaseError == null) {
+                        finish();
                     }
+                }
+            });
+
+
+            startActivity(new Intent(TodoActivity.this, MainActivity.class));
+
+
                 });
 
-
-                startActivity(new Intent(TodoActivity.this, MainActivity.class));
-            }
-        });
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 
@@ -269,67 +265,68 @@ public class TodoActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         });
         if (mDefaultLocation != null) {
-            mMap.addMarker(new MarkerOptions()
-                    .title(getString(R.string.default_info_title))
-                    .position(mDefaultLocation)
-                    .snippet(getString(R.string.default_info_snippet)));
+            addMarker(mDefaultLocation);
         }
 
         mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
 
             @Override
             public void onMapClick(LatLng latLng) {
-
-                latitude = Double.toString(latLng.latitude);
-                longitude = Double.toString(latLng.longitude);
-                // Creating a marker
-                MarkerOptions markerOptions = new MarkerOptions();
-
-                // Setting the position for the marker
-                markerOptions.position(latLng);
-
-                // Setting the title for the marker.
-                // This will be displayed on taping the marker
-
-                Geocoder geocoder;
-                List<Address> addresses = new ArrayList<>();
-                geocoder = new Geocoder(getApplicationContext(), Locale.getDefault());
-
-                try {
-                    addresses = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-                String address = addresses.get(0).getAddressLine(0); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
-                String city = addresses.get(0).getLocality();
-                String state = addresses.get(0).getAdminArea();
-                String country = addresses.get(0).getCountryName();
-                String postalCode = addresses.get(0).getPostalCode();
-                String knownName = addresses.get(0).getFeatureName();
-
-                postalCode = (postalCode == null) ? "" : postalCode;
-                address = (address == null) ? "unknown" : address;
-                city = (city == null) ? "" : city;
-                country = (country == null) ? "unknown" : country;
-                knownName = (knownName == null) ? "" : knownName;
-                state = (state == null) ? "unknown" : state;
-
-
-                markerOptions.title(knownName + "\n" + address + "\n" + city + ", " + state + ", " + country
-                        + ", " + postalCode);
-
-                // Clears the previously touched position
-                mMap.clear();
-
-                // Animating to the touched position
-                mMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
-
-                // Placing a marker on the touched position
-                mMap.addMarker(markerOptions);
+                addMarker(latLng);
 
             }
         });
+    }
+    public void addMarker(LatLng latLng) {
+        latitude = Double.toString(latLng.latitude);
+        longitude = Double.toString(latLng.longitude);
+        // Creating a marker
+        MarkerOptions markerOptions = new MarkerOptions();
+
+        // Setting the position for the marker
+        markerOptions.position(latLng);
+
+        // Setting the title for the marker.
+        // This will be displayed on taping the marker
+
+        Geocoder geocoder;
+        List<Address> addresses = new ArrayList<>();
+        geocoder = new Geocoder(getApplicationContext(), Locale.getDefault());
+
+        try {
+            addresses = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        String address = addresses.get(0).getAddressLine(0); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
+        String city = addresses.get(0).getLocality();
+        String state = addresses.get(0).getAdminArea();
+        String country = addresses.get(0).getCountryName();
+        String postalCode = addresses.get(0).getPostalCode();
+        String knownName = addresses.get(0).getFeatureName();
+
+        postalCode = (postalCode == null) ? "" : postalCode;
+        address = (address == null) ? "unknown" : address;
+        city = (city == null) ? "" : city;
+        country = (country == null) ? "unknown" : country;
+        knownName = (knownName == null) ? "" : knownName;
+        state = (state == null) ? "unknown" : state;
+
+        String place = address + "\n" + city + ", " + state + ", " + country
+                + ", " + postalCode;
+        markerOptions.title(place);
+
+        TextView view = (TextView) findViewById(R.id.show_location);
+        view.setText(place);
+        // Clears the previously touched position
+        mMap.clear();
+
+        // Animating to the touched position
+        mMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
+
+        // Placing a marker on the touched position
+        mMap.addMarker(markerOptions);
     }
 }
         //showCurrentPlace();

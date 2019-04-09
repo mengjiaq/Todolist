@@ -118,6 +118,11 @@ public class MainActivity extends AppCompatActivity {
 
             adapter.notifyDataSetChanged();
             return true;
+        } else if (id == R.id.sort_by_time) {
+            Collections.sort(events, (a, b)->(a.getName().compareTo(b.getName())));
+
+            adapter.notifyDataSetChanged();
+            return true;
         }
 
         return super.onOptionsItemSelected(item);
