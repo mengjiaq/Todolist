@@ -1,21 +1,14 @@
 package com.mobdev.neu.todolist;
 
 import android.app.DatePickerDialog;
-import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.design.widget.TextInputEditText;
-import android.support.design.widget.TextInputLayout;
-import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.Editable;
-import android.text.format.DateFormat;
 import android.view.View;
-import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -40,6 +33,7 @@ public class TodoActivity extends AppCompatActivity {
     boolean isEdit = false;
     int position = MainActivity.countEvent();
     TextView selectTime;
+    TextView selectLocation;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,7 +42,7 @@ public class TodoActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         selectTime = (TextView) findViewById(R.id.select_time);
-
+        selectLocation = (TextView) findViewById(R.id.select_location);
         Calendar cal = Calendar.getInstance();
         SimpleDateFormat sdf = new SimpleDateFormat("YYYY/mm/dd HH:mm");
         selectTime.setText(sdf.format(cal.getTime()));
@@ -143,6 +137,32 @@ public class TodoActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
+    int PLACE_PICKER_REQUEST = 1;
 
+    public void Goplacepicker(View view){
+
+        PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
+
+        try{
+            startActivityForResult(builder.build(TodoActivity.this),PLACE_PICKER_REQUEST);
+        }catch(GooglePlayServicesRepairableException e){
+            e.printStackTrace();
+        }catch(GooglePlayServicesNotAvailableException e){
+            e.printStackTrace();
+        }
+
+
+    }
+
+    @Override
+    protected void onActivityResult(int request, int resultCode, Intent data){
+
+        if(resultCode == PLACE_PICKER_REQUEST){
+            if(resultCode == RESULT_OK){
+                Place place = PlacePicker.getPlace(TodoActivity.this,data);
+                selectLocation.setText(place.getAddress());
+            }
+        }
+    }
 
 }

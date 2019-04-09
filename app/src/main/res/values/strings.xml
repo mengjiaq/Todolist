@@ -9,4 +9,5 @@
     <string name="title_activity_todo">TodoActivity</string>
     <string name="pick_time">Pick Time</string>
     <string name="pick_date">Pick Date</string>
+    <string name="google_maps_key">AIzaSyAB4hKfjzoXrsNutb7gWUrlY97mFjvXONg</string>
 </resources>

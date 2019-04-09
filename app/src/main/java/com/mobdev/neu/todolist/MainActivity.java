@@ -24,8 +24,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends AppCompatActivity {
     private static ArrayList<TodoEvent> events;
     private static Map<TodoEvent, String> map;
     private static EventAdapter adapter;
@@ -124,30 +123,30 @@ public class MainActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
-    @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
-        int id = item.getItemId();
-
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
-        }
-
-//        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-//        drawer.closeDrawer(GravityCompat.START);
-        return true;
-    }
+//    @SuppressWarnings("StatementWithEmptyBody")
+//    @Override
+//    public boolean onNavigationItemSelected(MenuItem item) {
+//        // Handle navigation view item clicks here.
+//        int id = item.getItemId();
+//
+//        if (id == R.id.nav_camera) {
+//            // Handle the camera action
+//        } else if (id == R.id.nav_gallery) {
+//
+//        } else if (id == R.id.nav_slideshow) {
+//
+//        } else if (id == R.id.nav_manage) {
+//
+//        } else if (id == R.id.nav_share) {
+//
+//        } else if (id == R.id.nav_send) {
+//
+//        }
+//
+////        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+////        drawer.closeDrawer(GravityCompat.START);
+//        return true;
+//    }
 
     public void onAddItem(View view) {
         startActivity(new Intent(MainActivity.this, TodoActivity.class));
@@ -180,7 +179,7 @@ public class MainActivity extends AppCompatActivity
         return events.size();
     }
 
-    public static TodoEvent getEvent(int pos) {
-        return events.get(pos);
-    }
+//    public static TodoEvent getEvent(int pos) {
+//        return events.get(pos);
+//    }
 }
