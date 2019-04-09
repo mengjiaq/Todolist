@@ -4,6 +4,8 @@ import android.content.Context;
 import android.location.Location;
 import android.location.LocationManager;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -14,6 +16,8 @@ public class TodoEvent implements Serializable {
     private String name;
     private String note;
     private String time;
+    private String latitude;
+    private String longitude;
 
 
 
@@ -54,6 +58,10 @@ public class TodoEvent implements Serializable {
     public void setNote(String note) {
         this.note = note;
     }
+    public String getLatitude() { return latitude;}
+    public void setLatitude(String latitude) {this.latitude = latitude; }
+    public String getLongitude() { return longitude;}
+    public void setLongitude(String longitude) {this.longitude = longitude; }
     private static int lastEventId = 0;
 
     public static ArrayList<TodoEvent> createEventsList(int numEvents) {
@@ -69,6 +77,9 @@ public class TodoEvent implements Serializable {
         todo.put("name", name);
         todo.put("note", note);
         todo.put("time", time);
+        todo.put("latitude", latitude);
+
+        todo.put("longitude", longitude);
 
         return todo;
     }
