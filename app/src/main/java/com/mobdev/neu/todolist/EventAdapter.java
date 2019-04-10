@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -12,10 +13,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -46,6 +47,17 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
         TextView textView = viewHolder.eventNameTextView;
         textView.setText(event.getName());
         viewHolder.eventTimeTextView.setText(event.getTime());
+        Calendar cal = Calendar.getInstance();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm");
+
+        String currentTime = sdf.format(cal.getTime());
+        if (currentTime.compareTo(event.getTime()) > 0) {
+            viewHolder.eventNameTextView.setTextColor(Color.RED);
+            viewHolder.eventTimeTextView.setTextColor(Color.RED);
+        } else {
+            viewHolder.eventNameTextView.setTextColor(Color.BLACK);
+            viewHolder.eventTimeTextView.setTextColor(Color.BLACK);
+        }
 
     }
 

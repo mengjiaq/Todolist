@@ -118,7 +118,7 @@ public class MainActivity extends AppCompatActivity {
 
             adapter.notifyDataSetChanged();
             return true;
-        } else if (id == R.id.sort_by_time) {
+        } else if (id == R.id.sort_by_name) {
             Collections.sort(events, (a, b)->(a.getName().compareTo(b.getName())));
 
             adapter.notifyDataSetChanged();

@@ -48,6 +48,7 @@ import com.google.android.gms.location.places.PlaceLikelihood;
 import com.google.android.gms.location.places.PlaceLikelihoodBufferResponse;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.location.places.ui.PlacePicker;
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -134,7 +135,8 @@ public class TodoActivity extends AppCompatActivity implements OnMapReadyCallbac
                 mTimePicker = new TimePickerDialog(TodoActivity.this,
                         (timePicker, selectedHour, selectedMinute) -> {
                     selectTime.setText(selectTime.getText()+ " " +
-                            (selectedHour > 9?selectedHour:"0"+selectedHour)+":"+selectedMinute);
+                            (selectedHour > 9?selectedHour:"0"+selectedHour)+":"+
+                            (selectedMinute > 9?selectedMinute:"0"+selectedMinute));
 
                 }, hour, minute,true);
                 mTimePicker.setTitle("Select Time");
@@ -144,8 +146,10 @@ public class TodoActivity extends AppCompatActivity implements OnMapReadyCallbac
                 // date picker dialog
                 DatePickerDialog mDatePicker = new DatePickerDialog(TodoActivity.this,
                         (view, yearName, monthOfYear, dayOfMonth) -> {
-                                selectTime.setText(yearName + "/" + ((monthOfYear + 1) > 9?
-                                        (monthOfYear + 1):"0"+(monthOfYear + 1)) + "/"+dayOfMonth);
+
+                                selectTime.setText(yearName + "/" +
+                                        ((monthOfYear + 1) > 9?"":"0")+(monthOfYear + 1)+ "/" +
+                                        ((dayOfMonth + 1) > 9?"":"0")+(dayOfMonth + 1));
 
                         }, year, month, day);
                 mDatePicker.show();
@@ -308,10 +312,12 @@ public class TodoActivity extends AppCompatActivity implements OnMapReadyCallbac
         mMap.clear();
 
         // Animating to the touched position
-        mMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
-
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+        CameraUpdate zoom=CameraUpdateFactory.zoomTo(15);
+        mMap.animateCamera(zoom);
         // Placing a marker on the touched position
         mMap.addMarker(markerOptions);
+
     }
 }
 

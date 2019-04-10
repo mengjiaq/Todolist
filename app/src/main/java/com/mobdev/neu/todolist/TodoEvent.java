@@ -78,7 +78,6 @@ public class TodoEvent implements Serializable {
         todo.put("note", note);
         todo.put("time", time);
         todo.put("latitude", latitude);
-
         todo.put("longitude", longitude);
 
         return todo;
