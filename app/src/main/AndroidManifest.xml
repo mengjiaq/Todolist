@@ -2,6 +2,13 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.mobdev.neu.todolist">
 
+
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -10,6 +17,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyAB4hKfjzoXrsNutb7gWUrlY97mFjvXONg"/>
 
         <activity
             android:name=".TodoActivity"
@@ -19,9 +29,7 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.mobdev.neu.todolist.MainActivity" />
-        </activity> <!-- <meta-data -->
-        <!-- android:name="com.google.android.actions" -->
-        <!-- android:resource="@xml/add_event" /> -->
+        </activity>
 
         <activity
             android:name=".MainActivity"
@@ -33,6 +41,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <!--<activity android:name=".MapsActivity"-->
+            <!--android:parentActivityName=".TodoActivity">-->
+
+            <!--<meta-data-->
+                <!--android:name="com.google.android.geo.API_KEY"-->
+                <!--android:value="@string/google_maps_key" />-->
+        <!--</activity>-->
     </application>
 
 </manifest>
